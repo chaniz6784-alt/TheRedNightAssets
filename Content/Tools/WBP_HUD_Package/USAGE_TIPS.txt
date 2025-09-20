@@ -1,0 +1,6 @@
+
+Quick customization tips after creation:
+- Open WBP_HealthBar: Add a ProgressBar and bind its Percent to a function or a variable exposed on the HUD.
+- Open WBP_HUD: Arrange Health/Mana bars and add a Canvas Panel for LootToast anchors (top-right).
+- LootToast: use a VerticalBox with Title (Text) + SmallImage to show quick pick-up messages.
+- To update the HUD from C++ or Blueprint: call 'Get Player Controller' -> cast to your custom PC -> call any exposed functions (or update widget variables).

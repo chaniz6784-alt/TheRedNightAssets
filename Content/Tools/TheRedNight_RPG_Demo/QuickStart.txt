@@ -1,0 +1,70 @@
+
+TheRedNight — RPG Demo Installer (Drag & Drop)
+==============================================
+
+What this installs (inside your project):
+- UI: /Game/UI  -> WBP_HUD, WBP_HealthBar, WBP_ManaBar, WBP_LootToast
+- Blueprints: /Game/Blueprints -> BP_AutoHUD, BP_LootChest, BP_Enemy_Trash (stubs ready to wire)
+- Map: /Game/Maps/Map_LootDemo (empty scaffold)
+
+One‑click install (preferred):
+1) Extract this folder to your project root so this exists:
+   Content\Tools\TheRedNight_RPG_Demo\install_demo.py
+2) Double‑click Run_Installer.bat
+   - If it errors about paths, edit the .bat top lines for UEPATH and UPROJECT.
+3) When Unreal opens, check Output Log for "TRN Demo Installer: DONE".
+
+Make it playable in ~3 minutes (recommended wiring):
+A) AutoHUD
+   - Open BP_AutoHUD Event Graph.
+   - Add:
+       Event BeginPlay
+         -> Create Widget (Class = WBP_HUD)
+         -> Promote to variable: HUD_Ref (type WBP_HUD)
+         -> Add to Viewport
+   - Compile & Save. Drag 1x BP_AutoHUD into Map_LootDemo.
+
+B) Loot Chest (multiple drops + rarity colors)
+   - In BP_LootChest, create variables (Editable, Instance Editable):
+       LootNames (String Array)  = ["Sword","Axe","Bow","Dagger","Staff","Helmet","Chestplate","Boots","Shield","Health Potion","Mana Potion","Amulet","Ring"]
+       RarityWeights (Float Array) = [60,25,10,4,1]  // Common..Legendary
+       MinDrops (Integer) = 1
+       MaxDrops (Integer) = 3
+   - Add components: StaticMesh (any chest/cube), Box Collision around it.
+   - Graph:
+       On Box BeginOverlap (OtherActor -> player?)
+         -> For N in RandomIntegerInRange(MinDrops,MaxDrops):
+               ItemName = RandomItemFrom(LootNames)
+               TierIdx  = WeightedRandom(RarityWeights)  // 0..4
+               RarityText  = ["Common","Uncommon","Rare","Epic","Legendary"][TierIdx]
+               RarityColor = [Gray,Green,Blue,Purple,Orange][TierIdx]
+               -> GetAllActorsOfClass(BP_AutoHUD)
+               -> Get HUD_Ref
+               -> Call HUD_Ref.ShowLoot(ItemName, RarityText, RarityColor)
+         -> DestroyActor (self)
+
+C) HUD Toasts
+   - In WBP_HUD Designer: Canvas -> VerticalBox named LootFeed (anchored top-right)
+   - Create function ShowLoot(Item, RarityText, Color):
+       -> CreateWidget(WBP_LootToast) -> SetText / SetColor on it -> AddChildToVerticalBox(LootFeed)
+       -> Play Animation (fade out in ~3 sec) -> Remove from parent
+
+D) Health/Mana + Enemy
+   - In your Character BP: variables Health(float)=100, Mana(float)=100 (Instance Editable).
+   - In WBP_HealthBar/WBP_ManaBar: Bind Percent to Health/100 and Mana/100 via HUD_Ref
+   - In BP_Enemy_Trash (Character):
+       - Add a SphereCollision "MeleeRange" (radius ~150). On BeginOverlap with Player:
+           -> Start Timer (2.0s looping): ApplyDamage(Player, 10)
+       - On AnyDamage received: Health -= Damage; if Health<=0 -> DestroyActor; SpawnActor BP_LootChest at death location
+
+E) Player Attack (Left Mouse)
+   - In Character BP: InputAction / Left Mouse Button:
+       -> LineTrace (or SphereTrace) forward ~200 units. If hit BP_Enemy_Trash:
+           -> ApplyDamage(HitActor, 25)
+
+F) Demo map
+   - Open /Game/Maps/Map_LootDemo
+   - Place: 1x BP_AutoHUD, 1x BP_LootChest, 1x BP_Enemy_Trash
+   - Press Play. You should see HUD; enemy will approach and damage you; you can left‑click to damage enemy; chests drop multiple colored loot toasts.
+
+If you want, I can generate per‑node visual step files for each blueprint (printable) — ask me for "node cards".

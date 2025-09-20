@@ -1,0 +1,56 @@
+
+TheRedNight — Drag & Drop HUD Starter (Real‑looking theme ready to style)
+=========================================================================
+
+What you got
+------------
+- One‑click launcher: Run_Installer.bat  (opens Unreal and runs the installer script)
+- Installer script: install_all.py       (creates Widget Blueprints under /Game/UI)
+- Resulting assets:  /Game/UI/WBP_HUD, WBP_HealthBar, WBP_ManaBar, WBP_LootToast
+- Blueprint folder:  /Game/Blueprints    (empty placeholder to keep things organized)
+
+How to install (1 click preferred)
+----------------------------------
+1) Extract this ZIP to your project root so this folder path exists:
+   Content\Tools\TheRedNight_Installer
+   Example:
+   C:\\Users\\chani\\Documents\\Unreal Projects\\TheRedNight\\Content\Tools\TheRedNight_Installer
+
+2) Double‑click: Run_Installer.bat
+   - If it errors about path, edit the .bat top variables:
+       UEPATH   -> your UnrealEditor.exe
+       UPROJECT -> your .uproject file
+   - It will launch Unreal and auto‑run the installer.
+
+3) In Unreal, open Content Browser -> /Game/UI and you will see your widgets.
+   Right‑click the UI folder -> Fix Up Redirectors (if shown).
+
+4) Show the HUD in game (fastest path):
+   - Open your Level Blueprint.
+   - Add nodes:
+       Event BeginPlay
+         -> Create Widget (Class = WBP_HUD)
+         -> Add To Viewport
+   - Press Play.
+
+Make it look like a "real game"
+-------------------------------
+Open WBP_HUD and do a quick pass:
+- Add a Canvas Panel (full screen, Anchors = Full)
+- Add two ProgressBars:
+    Health bar (top-left): percent 0.75, size 400x24
+    Mana bar   (below):    percent 0.45, size 400x20
+- Add a TextBlock "The Red Night" (top-center), set font size 36
+- Add a VerticalBox at top-right for loot toasts (reserve space)
+
+Optional polish (2 minutes):
+- Health bar: red fill; Mana bar: blue; set background alpha ~0.35
+- Add a thin Image panel behind bars (black with 0.4 opacity) for a sleek frame
+- Use rounded "Marble" brush style if you have it; any clean font works (Roboto)
+
+Troubleshooting
+---------------
+- If Run_Installer.bat doesn't open Unreal, launch Unreal manually and in Python Console run:
+  exec(open(r"C:\\Users\\chani\\Documents\\Unreal Projects\\TheRedNight\\Content\Tools\TheRedNight_Installer\\install_all.py").read())
+
+- If you still don't see the HUD on Play, double-check your Level Blueprint has CreateWidget(WBP_HUD)->AddToViewport.

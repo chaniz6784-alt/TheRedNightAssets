@@ -1,0 +1,9 @@
+
+TRN — One-Click Demo
+====================
+1) Extract ZIP to project root so you get:
+   Content\Tools\TRN_OneClick\install_full_demo.py
+2) Double-click Run_OneClick.bat
+3) Open /Game/Maps/Map_LootDemo (actors already placed).
+
+Finish wiring (5 min) -> see NodeCards.txt for exact nodes.

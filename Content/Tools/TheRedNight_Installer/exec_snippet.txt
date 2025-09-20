@@ -1,0 +1,3 @@
+
+# Fallback: paste this into Unreal's Python Console
+exec(open(r"C:\\Users\\chani\\Documents\\Unreal Projects\\TheRedNight\\Content\Tools\TheRedNight_Installer\\install_all.py").read())

@@ -1,0 +1,7 @@
+
+Optional: run the script from PowerShell (editor must be open)
+-------------------------------------------------------------
+You can run the Python script from the Editor's commandlet using the "Run Python Script" command if you prefer.
+
+Example (run inside an Editor Python console is recommended):
+exec(open(r"C:\full\path\to\create_widgets.py").read())
